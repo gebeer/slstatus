@@ -1,13 +1,16 @@
 /* See LICENSE file for copyright and license details. */
 
 /* interval between updates (in ms) */
-const unsigned int interval = 1000;
+const unsigned int interval = 3000;
 
 /* text to show if no value can be retrieved */
 static const char unknown_str[] = "n/a";
 
 /* maximum output string length */
 #define MAXLEN 2048
+
+#include "slstatus.h"
+#include <stdlib.h>
 
 /*
  * function            description                     argument (example)
@@ -50,7 +53,7 @@ static const char unknown_str[] = "n/a";
  * swap_perc           swap usage in percent           NULL
  * swap_total          total swap size in GB           NULL
  * swap_used           used swap in GB                 NULL
- * temp                temperature in degree celsius   sensor file
+ * temp                temperature in degree celsius   sensor file path or shell command
  *                                                     (/sys/class/thermal/...)
  *                                                     NULL on OpenBSD
  *                                                     thermal zone on FreeBSD
@@ -66,6 +69,7 @@ static const char unknown_str[] = "n/a";
 static const struct arg args[] = {
 	/* function format          argument */
 	{ cpu_perc, "  󰻠 %s%%",           NULL },
+	// { temp, "   %s°C",           NULL },
 	{ temp, "   %s°C",           "sensors | grep 'Tctl:' | awk '{print $2}' | sed 's/[^0-9.]//g'" },
 	{ datetime, "   %s",           "%F %H:%M" },
 	// { ram_perc, " | 󰍛 %s%%",           NULL },
