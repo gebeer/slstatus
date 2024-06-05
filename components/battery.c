@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "../slstatus.h"
 #include "../util.h"
@@ -35,16 +36,27 @@
 		return NULL;
 	}
 
+	#define BATTERY_THRESHOLD 10
+
 	const char *
 	battery_perc(const char *bat)
 	{
 		int cap_perc;
 		char path[PATH_MAX];
+		static int beep_count = 0;  // Track the number of beeps issued
 
 		if (esnprintf(path, sizeof(path), POWER_SUPPLY_CAPACITY, bat) < 0)
 			return NULL;
 		if (pscanf(path, "%d", &cap_perc) != 1)
 			return NULL;
+
+		if (cap_perc <= BATTERY_THRESHOLD && beep_count < 3) {
+			system("beep");  // Issue beep command
+			system("notify-send -u critical 'Warning: Low Battery' 'Battery level is critically low.'");
+			beep_count++;  // Increment beep count
+		} else if (cap_perc >= BATTERY_THRESHOLD) {
+			beep_count = 0;  // Reset beep count
+		}
 
 		return bprintf("%d", cap_perc);
 	}
