@@ -68,9 +68,11 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
 	/* function format          argument */
-	{ cpu_perc, "  󰻠 %s%%",           NULL },
-	{ ram_perc, " | 󰍛 %s%%",           NULL },
+	// { cpu_perc, "  󰻠 %s%%",           NULL },
+	{ ram_perc, "󰍛 %s%%",           NULL },
 	{ temp, "   %s°C",           "sensors | grep 'Tctl:' | awk '{print $2}' | sed 's/[^0-9.]//g'" },
 	{ datetime, "   %s",           "%F %H:%M" },
+    { battery_perc, "  󰁹 %s%%",           "BAT0" },
 	// { netspeed_rx, " | 󰱦 %s",           "enp3s0" },
 };
+
